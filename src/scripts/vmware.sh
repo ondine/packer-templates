@@ -30,44 +30,19 @@
 #
 # -----------------------------------------------------------------------------
 
-
-pushd () {
-    command pushd "$@" > /dev/null
-}
-
-popd () {
-    command popd "$@" > /dev/null
-}
-
 # --- Body --------------------------------------------------------------------
 
-CHECKPOINT_DISABLE=1
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-pushd "$DIR/../src"
-
-#
-# Remove dist folder
-#
-if [ -d dist ]; then
-	rm -Rf dist
-fi
-mkdir -p dist
-
-#
-# Validate Template
-#
-if ! packer validate template.json; then
-	echo "Validation failed!"
-	exit 1;
-fi
-
-#
-# Build Template
-#
-if ! packer build template.json; then
-	echo "Build failed!"
-	exit 1;
-fi
-
-popd
+echo ""
+echo ""
+echo ""
+echo "-----------------------------------------------------------------------------"
+echo " Installing VMWare Tools"
+echo "-----------------------------------------------------------------------------"
+apt-get -y update
+wget http://packages.vmware.com/tools/keys/VMWARE-PACKAGING-GPG-RSA-KEY.pub
+apt-key add VMWARE-PACKAGING-GPG-RSA-KEY.pub
+apt-get -y install python-software-properties
+apt-get -y update
+apt-add-repository -y 'deb http://packages.vmware.com/tools/esx/6.0u1/ubuntu precise main'
+apt-get -y update
+apt-get -y install vmware-tools-esx-nox

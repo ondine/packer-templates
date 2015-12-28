@@ -30,44 +30,54 @@
 #
 # -----------------------------------------------------------------------------
 
-
-pushd () {
-    command pushd "$@" > /dev/null
-}
-
-popd () {
-    command popd "$@" > /dev/null
-}
-
 # --- Body --------------------------------------------------------------------
 
-CHECKPOINT_DISABLE=1
+echo ""
+echo ""
+echo ""
+echo "-----------------------------------------------------------------------------"
+echo " Cleaning Up"
+echo "-----------------------------------------------------------------------------"
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-pushd "$DIR/../src"
+# package cleanup
+apt-get -y autoremove
+apt-get -y clean
 
-#
-# Remove dist folder
-#
-if [ -d dist ]; then
-	rm -Rf dist
-fi
-mkdir -p dist
+# Stop auditing services
+service auditd stop
+service rsyslog stop
 
-#
-# Validate Template
-#
-if ! packer validate template.json; then
-	echo "Validation failed!"
-	exit 1;
-fi
+# Rote all logs
+logrotate –f /etc/logrotate.conf
+find /var/log -name "*.gz" -type f -delete
 
-#
-# Build Template
-#
-if ! packer build template.json; then
-	echo "Build failed!"
-	exit 1;
-fi
+# Truncate Log Files
+cat /dev/null > /var/log/audit/audit.log
+cat /dev/null > /var/log/wtmp
+cat /dev/null > /var/log/lastlog
 
-popd
+# cleaning up udev rules
+rm -f /etc/udev/rules.d/70-persistent-net.rules
+mkdir /etc/udev/rules.d/70-persistent-net.rules
+rm -rf /dev/.udev/
+rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
+
+# cleaning up temporary files
+rm -rf /tmp/*
+rm -rf /var/tmp/*
+
+# cleaning up ssh
+rm -f /etc/ssh/*host*
+rm –rf /etc/ssh/*key*
+rm –rf ~/.ssh/authorized_keys
+
+# remove hostname
+cat /dev/null > /etc/hostname
+
+# remove history
+history -w
+history -c
+
+
+# remove DHCP leases
+rm -f /var/lib/dhcp*/*leases*

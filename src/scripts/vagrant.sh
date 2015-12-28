@@ -30,44 +30,19 @@
 #
 # -----------------------------------------------------------------------------
 
-
-pushd () {
-    command pushd "$@" > /dev/null
-}
-
-popd () {
-    command popd "$@" > /dev/null
-}
-
 # --- Body --------------------------------------------------------------------
 
-CHECKPOINT_DISABLE=1
+echo ""
+echo ""
+echo ""
+echo "-----------------------------------------------------------------------------"
+echo " Prepare Machine for Vagrant"
+echo "-----------------------------------------------------------------------------"
+date > /etc/vagrant_box_build_time
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-pushd "$DIR/../src"
-
-#
-# Remove dist folder
-#
-if [ -d dist ]; then
-	rm -Rf dist
-fi
-mkdir -p dist
-
-#
-# Validate Template
-#
-if ! packer validate template.json; then
-	echo "Validation failed!"
-	exit 1;
-fi
-
-#
-# Build Template
-#
-if ! packer build template.json; then
-	echo "Build failed!"
-	exit 1;
-fi
-
-popd
+mkdir /home/vagrant/.ssh
+wget --no-check-certificate \
+    'https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub' \
+    -O /home/vagrant/.ssh/authorized_keys
+chown -R vagrant /home/vagrant/.ssh
+chmod -R go-rwsx /home/vagrant/.ssh

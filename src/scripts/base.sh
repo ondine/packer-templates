@@ -30,44 +30,14 @@
 #
 # -----------------------------------------------------------------------------
 
-
-pushd () {
-    command pushd "$@" > /dev/null
-}
-
-popd () {
-    command popd "$@" > /dev/null
-}
-
 # --- Body --------------------------------------------------------------------
 
-CHECKPOINT_DISABLE=1
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-pushd "$DIR/../src"
-
-#
-# Remove dist folder
-#
-if [ -d dist ]; then
-	rm -Rf dist
-fi
-mkdir -p dist
-
-#
-# Validate Template
-#
-if ! packer validate template.json; then
-	echo "Validation failed!"
-	exit 1;
-fi
-
-#
-# Build Template
-#
-if ! packer build template.json; then
-	echo "Build failed!"
-	exit 1;
-fi
-
-popd
+echo ""
+echo ""
+echo ""
+echo "-----------------------------------------------------------------------------"
+echo " Configuring Virtual Machine"
+echo "-----------------------------------------------------------------------------"
+apt-get update
+apt-get -y upgrade
+apt-get -y install linux-headers-$(uname -r)
