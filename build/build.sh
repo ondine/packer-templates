@@ -44,19 +44,20 @@ popd () {
 CHECKPOINT_DISABLE=1
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-pushd "$DIR/.."
+pushd "$DIR/../src"
 
 #
-# Remove dist folder
+# Remove output folders
 #
-if [ -d dist ]; then
-	rm -Rf dist
+if [ -d ../dist ]; then
+	rm -Rf ../dist
 fi
+mkdir -p ../dist
 
 # #
 # # Validate Template
 # #
-# if ! packer validate src/template.json; then
+# if ! packer validate template.json; then
 # 	echo "Validation failed!"
 # 	exit 1;
 # fi
@@ -64,7 +65,7 @@ fi
 # #
 # # Build Template
 # #
-# if ! packer build src/template.json; then
+# if ! packer build template.json; then
 # 	echo "Build failed!"
 # 	exit 1;
 # fi
