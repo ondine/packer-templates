@@ -54,20 +54,20 @@ if [ -d ../dist ]; then
 fi
 mkdir -p ../dist
 
-# #
-# # Validate Template
-# #
-# if ! packer validate template.json; then
-# 	echo "Validation failed!"
-# 	exit 1;
-# fi
 #
-# #
-# # Build Template
-# #
-# if ! packer build template.json; then
-# 	echo "Build failed!"
-# 	exit 1;
-# fi
+# Validate Template
+#
+if ! packer validate template.json; then
+	echo "Validation failed!"
+	exit 1;
+fi
+
+#
+# Build Template
+#
+if ! packer build template.json; then
+	echo "Build failed!"
+	exit 1;
+fi
 
 popd
