@@ -29,45 +29,27 @@
 # SOFTWARE.
 #
 # -----------------------------------------------------------------------------
-
-
-pushd () {
-    command pushd "$@" > /dev/null
-}
-
-popd () {
-    command popd "$@" > /dev/null
-}
+# 
+# References:
+# https://lonesysadmin.net/2013/03/26/preparing-linux-template-vms/
+# 
+# -----------------------------------------------------------------------------
 
 # --- Body --------------------------------------------------------------------
 
-CHECKPOINT_DISABLE=1
+echo ""
+echo ""
+echo ""
+echo "-----------------------------------------------------------------------------"
+echo " Cleaning Up"
+echo "-----------------------------------------------------------------------------"
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-pushd "$DIR/../src"
+# Stop auditing services
+service auditd stop
+service rsyslog stop
 
-#
-# Remove output folders
-#
-if [ -d ../dist ]; then
-	rm -Rf ../dist
-fi
-mkdir -p ../dist
+# kernel cleanup
+package-cleanup --oldkernels --count=1
 
-#
-# Validate Template
-#
-if ! packer validate template.json; then
-	echo "Validation failed!"
-	exit 1;
-fi
-
-#
-# Build Template
-#
-if ! packer build template.json; then
-	echo "Build failed!"
-	exit 1;
-fi
-
-popd
+# package cleanup
+yum -y clean all

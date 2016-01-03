@@ -30,44 +30,14 @@
 #
 # -----------------------------------------------------------------------------
 
-
-pushd () {
-    command pushd "$@" > /dev/null
-}
-
-popd () {
-    command popd "$@" > /dev/null
-}
-
 # --- Body --------------------------------------------------------------------
 
-CHECKPOINT_DISABLE=1
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-pushd "$DIR/../src"
-
-#
-# Remove output folders
-#
-if [ -d ../dist ]; then
-	rm -Rf ../dist
-fi
-mkdir -p ../dist
-
-#
-# Validate Template
-#
-if ! packer validate template.json; then
-	echo "Validation failed!"
-	exit 1;
-fi
-
-#
-# Build Template
-#
-if ! packer build template.json; then
-	echo "Build failed!"
-	exit 1;
-fi
-
-popd
+echo ""
+echo ""
+echo ""
+echo "-----------------------------------------------------------------------------"
+echo " Configuring Virtual Machine"
+echo "-----------------------------------------------------------------------------"
+yum -y update
+yum -y install yum-utils 
+yum -y install wget
