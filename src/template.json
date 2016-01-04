@@ -1,3 +1,52 @@
 {
-
+    "builders": [
+        {
+            "type": "vmware-iso",
+			"boot_command": [
+                "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+            ],
+            "boot_wait": "10s",
+            "iso_url": "http://192.168.1.4/depot/centos/7/CentOS-7-x86_64-Minimal-1511.iso",
+            "iso_checksum": "88c0437f0a14c6e2c94426df9d43cd67",
+            "iso_checksum_type": "md5",
+            "headless": false,
+			"http_directory": "http",
+            "guest_os_type": "centos-64",
+            "shutdown_command": "echo '/sbin/halt -h -p' > /tmp/poweroff.sh; echo 'vagrant'|sudo -S sh '/tmp/poweroff.sh'",
+            "ssh_username": "vagrant",
+            "ssh_password": "vagrant",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "10000s",
+            "version": 11,
+            "disk_size": 65536,
+            "vmx_data": {
+                "displayName": "CentOS 7 64-bit Packer Template",
+                "memsize": "1024",
+                "numvcpus": "1",
+                "cpuid.coresPerSocket": "1"
+            }
+        }
+    ],
+   "provisioners": [
+   {
+            "type": "shell",
+            "execute_command": "echo 'vagrant' |sudo -S sh '{{.Path}}' ",
+            "override": {
+                "vmware-iso": {
+                    "scripts": [
+                        "scripts/base.sh",
+                        "scripts/vagrant.sh",
+                        "scripts/vmware.sh",
+                        "scripts/cleanup.sh"
+                    ]
+                }
+            }
+        }
+  ],
+    "post-processors": [
+        {
+            "type": "vagrant",
+            "output": "../dist/centos-7-amd64-{{.Provider}}.box"
+        }
+    ]
 }
