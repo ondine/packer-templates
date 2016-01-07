@@ -6,7 +6,8 @@
             "floppy_files": [
                 "autounattend.xml",
                 "scripts/remote.cmd",
-                "scripts/vmware.cmd"
+                "scripts/vmware.cmd",
+                "scripts/wmf.cmd"
             ],
             "guest_os_type": "windows8srv-64",
             "headless": false,

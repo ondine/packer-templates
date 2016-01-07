@@ -14,3 +14,7 @@ netsh firewall add portopening TCP 5985 "Port 5985"
 net stop winrm
 sc.exe config winrm start= auto
 net start winrm
+
+dism /online /enable-feature:MicrosoftWindowsPowerShellV2
+dism /online /enable-feature:MicrosoftWindowsPowerShellV2-WOW64
+
