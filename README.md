@@ -15,13 +15,11 @@ The goal of this exercise on this branch is to first successfully run a CentOS 7
 
 ## Get Started
 
-1. Switch to the 
-
-1. **Create a branch** In order to create a new vagrant box, you'll first need to create a `branch checkout -b os/version/arch` with the OS, Version and Architecture.
+1. Switch to the centos/7/amd64 branch
 
 		git checkout -b NEED REAL COMMAND HERE
 		
-2. There is a build directory `build/build.sh`, containing a build script `build.sh`. Open and uncomment the following section:
+2. Locate the build directory `build/build.sh`, containing a build script `build.sh`. Open and uncomment the following section:
 
 		``` bash
 		#
@@ -63,9 +61,11 @@ The goal of this exercise on this branch is to first successfully run a CentOS 7
 		==> Builds finished but no artifacts were created.
 		Build failed!
 
+8. **Create a branch** In order to create a new vagrant box, you'll first need to create a `branch checkout -b os/version/arch` with the OS, Version and Architecture.
+
 ###	 Troubleshooting
 
-If you see a result similar to this, you may be on the **master** branch. This branch does not have any information defined in the `src/template.json` file. Switch to a desired branch and try again.
+If you see a result similar to this, you may be on the **master** branch. This branch does not have any information defined in the `src/template.json` file. Switch to a desired OS/Version/Architecture branch and try again.
 		
 		build.sh: line 58: Validate: command not found
 		Error initializing core: 1 error(s) occurred:
